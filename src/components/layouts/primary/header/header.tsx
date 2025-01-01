@@ -26,14 +26,14 @@ const PrimaryHeader = () => {
           |
           <Link
             className="font-medium hover:opacity-70 active:opacity-100 transition-all"
-            href="/"
+            href="/about-us"
           >
             درباره ما
           </Link>
           |
           <Link
             className="font-medium hover:opacity-70 active:opacity-100 transition-all"
-            href="/"
+            href="/contact-us"
           >
             تماس با ما
           </Link>

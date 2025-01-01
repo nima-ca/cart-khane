@@ -1,5 +1,6 @@
 import logoImg from "@images/logo/logo-white.png";
 import { GithubIcon } from "@src/components/icons/github";
+import { LinkedinIcon } from "@src/components/icons/linkedin";
 import { XIcon } from "@src/components/icons/x";
 import Image from "next/image";
 import Link from "next/link";
@@ -26,13 +27,13 @@ const PrimaryFooter = () => {
             <Link className="text-sm lg:text-base" href="/">
               صفحه اصلی
             </Link>
-            <Link className="text-sm lg:text-base" href="/">
+            <Link className="text-sm lg:text-base" href="/about-us">
               درباره ما
             </Link>
-            <Link className="text-sm lg:text-base" href="/">
+            <Link className="text-sm lg:text-base" href="/contact-us">
               تماس با ما
             </Link>
-            <Link className="text-sm lg:text-base" href="/">
+            <Link className="text-sm lg:text-base" href="/privacy-and-policies">
               حریم خصوصی
             </Link>
           </div>
@@ -47,6 +48,10 @@ const PrimaryFooter = () => {
 
             <Link href="/">
               <XIcon className="w-6 h-6 fill-white" />
+            </Link>
+
+            <Link href="/">
+              <LinkedinIcon className="w-6 h-6" />
             </Link>
           </div>
         </div>

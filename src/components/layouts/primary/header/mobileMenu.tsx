@@ -42,14 +42,14 @@ const MobileMenu = () => {
                 صفحه اصلی
               </Link>{" "}
               <Link
-                href="/"
+                href="/about-us"
                 onClick={closeMenu}
                 className="font-medium hover:opacity-70 active:opacity-100 transition-all"
               >
                 درباره ما
               </Link>
               <Link
-                href="/"
+                href="/contact-us"
                 onClick={closeMenu}
                 className="font-medium hover:opacity-70 active:opacity-100 transition-all"
               >
