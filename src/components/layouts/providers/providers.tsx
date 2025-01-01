@@ -14,7 +14,7 @@ const Providers: FC<PropsWithChildren> = ({ children }) => {
       <ToastContainer
         rtl
         theme="light"
-        autoClose={500000}
+        autoClose={5000}
         position="top-center"
         closeButton={false}
       />

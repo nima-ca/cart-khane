@@ -162,7 +162,7 @@ const LoginForm = () => {
 
         {step === LoginStep.OTP && (
           <IconButton
-            className="text-regal-blue-500 absolute top-6 left-4"
+            className="text-regal-blue-500 absolute top-3 left-4 lg:top-6"
             onClick={() => {
               setStep(LoginStep.PhoneNumber);
             }}
