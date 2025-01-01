@@ -28,7 +28,6 @@ const Button: FC<ButtonProps> = ({
 
     if (href) {
       router.push(href);
-      return;
     }
 
     if (onClick) {

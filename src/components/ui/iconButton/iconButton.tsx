@@ -28,7 +28,6 @@ const IconButton: FC<ButtonProps> = ({
 
     if (href) {
       router.push(href);
-      return;
     }
 
     if (onClick) {
