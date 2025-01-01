@@ -8,6 +8,7 @@ import { ButtonHTMLAttributes, FC, MouseEvent } from "react";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   href?: string;
   loading?: boolean;
+  variant?: "contained" | "outlined";
 }
 
 const Button: FC<ButtonProps> = ({
@@ -17,6 +18,7 @@ const Button: FC<ButtonProps> = ({
   onClick,
   disabled,
   loading,
+  variant = "contained",
   ...props
 }) => {
   const router = useRouter();
@@ -40,6 +42,10 @@ const Button: FC<ButtonProps> = ({
       onClick={handleButtonClick}
       className={cn(
         "flex items-center gap-2 justify-center bg-regal-blue-500 py-2 px-4 rounded-md text-white hover:opacity-90 transition-all active:opacity-100 font-bold text-sm lg:text-base",
+        {
+          "bg-transparent text-regal-blue-500 border border-regal-blue-500":
+            variant === "outlined",
+        },
         {
           "cursor-not-allowed opacity-70 hover:opacity-70 active:opacity-70":
             disabled || loading,

@@ -39,7 +39,7 @@ const PrimaryHeader = () => {
           </Link>
         </div>
         <div className="hidden lg:flex items-center gap-4">
-          <Button href="/">ورود به اپلیکیشن</Button>
+          <Button href="/auth/login">ورود به اپلیکیشن</Button>
         </div>
 
         {/* Mobile */}
