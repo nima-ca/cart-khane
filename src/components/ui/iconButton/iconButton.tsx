@@ -10,7 +10,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 
-const Button: FC<ButtonProps> = ({
+const IconButton: FC<ButtonProps> = ({
   children,
   className,
   href,
@@ -40,9 +40,9 @@ const Button: FC<ButtonProps> = ({
     <button
       onClick={handleButtonClick}
       className={cn(
-        "flex items-center gap-2 justify-center bg-regal-blue-500 py-2 px-4 rounded-md text-white hover:opacity-90 transition-all active:opacity-100 font-bold text-sm lg:text-base",
+        "flex items-center gap-2 justify-center p-2 rounded-md text-white hover:bg-gray-200 transition-all active:bg-gray-300",
         {
-          "cursor-not-allowed opacity-70 hover:opacity-70 active:opacity-70":
+          "cursor-not-allowed bg-gray-200 hover:bg-gray-200 active:bg-gray-200":
             disabled || loading,
         },
         className
@@ -51,9 +51,9 @@ const Button: FC<ButtonProps> = ({
       {...props}
     >
       {loading && <Loader2 className="animate-spin" />}
-      {children}
+      {!loading && children}
     </button>
   );
 };
 
-export default Button;
+export default IconButton;

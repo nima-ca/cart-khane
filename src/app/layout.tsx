@@ -1,5 +1,5 @@
-import PrimaryLayout from "@src/layouts/primary/primary";
-import Providers from "@src/layouts/providers/providers";
+import PrimaryLayout from "@src/components/layouts/primary/primary";
+import Providers from "@src/components/layouts/providers/providers";
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
 import "./globals.css";
