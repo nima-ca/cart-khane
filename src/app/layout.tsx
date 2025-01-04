@@ -1,4 +1,3 @@
-import PrimaryLayout from "@src/components/layouts/primary/primary";
 import Providers from "@src/components/layouts/providers/providers";
 import type { Metadata } from "next";
 import { Vazirmatn } from "next/font/google";
@@ -25,9 +24,7 @@ export default function RootLayout({
       <body
         className={`${vazirmatn.variable} antialiased bg-regal-blue-50 font-vazirmatn`}
       >
-        <Providers>
-          <PrimaryLayout>{children}</PrimaryLayout>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
