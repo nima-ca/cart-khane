@@ -1,40 +1,31 @@
 "use client";
 
 import emptyImg from "@images/empty-state.svg";
-import logoImg from "@images/logo/logo.png";
-import Button from "@src/components/ui/button/button";
 import IconButton from "@src/components/ui/iconButton/iconButton";
 import Input from "@src/components/ui/input/input";
+import { QueryKeys } from "@src/constants/queryKeys";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDebounce } from "@uidotdev/usehooks";
-import { Plus, Search, UserCircle } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { nanoid } from "nanoid";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { getContactListAPI } from "./(api)/apis";
-import AddContactModal from "./(components)/addContactModal";
 import CardSkeleton from "./(components)/cardSkeleton";
 import ContactCard from "./(components)/contactCard";
 
 const AppPage = () => {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
-  const [isCreateContactModalOpen, setIsCreateContactModalOpen] =
-    useState(false);
-
-  const toggleCreateContactModal = (state?: boolean) => {
-    setIsCreateContactModalOpen((prevState) => {
-      return state ?? !prevState;
-    });
-  };
-
   const debouncedSearch = useDebounce(search, 300);
 
-  const { data, isFetching, refetch } = useInfiniteQuery({
-    queryKey: ["contact-list", debouncedSearch],
+  const { data, isFetching } = useInfiniteQuery({
+    queryKey: [QueryKeys.ContactList, debouncedSearch],
     queryFn: ({ pageParam }) => {
       return getContactListAPI({
         limit: 20,
@@ -65,35 +56,22 @@ const AppPage = () => {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex items-center justify-between w-full border-b border-gray-200 px-4">
-        <div className="flex items-center justify-center py-4">
-          <Image src={logoImg} alt="کارت خانه" width={40} height={40} />
-          <h1 className="font-bold text-lg mt-2 text-regal-blue-500">
-            کارت خانه
-          </h1>
-        </div>
-        <IconButton className="text-regal-blue-500 mt-2" type="button">
-          <UserCircle />
-        </IconButton>
-      </div>
-
-      <div className="w-full px-4 flex flex-col lg:flex-row gap-4">
+      <div className="w-full px-4 flex flex-row gap-4">
         <Input
           value={search}
           onChange={handleSearchChange}
           placeholder="جستجوی نام، شماره همراه و ایمیل مخاطب"
           endIcon={<Search className="text-regal-blue-500 w-5 h-5" />}
         />
-        <Button
-          className="w-full lg:w-60"
-          onClick={() => toggleCreateContactModal(true)}
+        <IconButton
+          onClick={() => router.push("/app/contact/create")}
+          className="border border-regal-blue-500"
         >
-          افزودن مخاطب
-          <Plus className="w-5 h-5" />
-        </Button>
+          <Plus className="w-5 h-5 text-regal-blue-500" />
+        </IconButton>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 px-4 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 px-4 gap-2">
         {!isFetching && isContactListEmpty && (
           <div className="lg:col-span-2 flex flex-col items-center justify-center my-24">
             <Image
@@ -102,7 +80,7 @@ const AppPage = () => {
               width={200}
               height={200}
             />
-            <p className="font-bold text-sm lg:text-base">مخاطبی یافت نشد!</p>
+            <p className="text-sm lg:text-base">مخاطبی یافت نشد!</p>
           </div>
         )}
         {isFetching && <Skeletons />}
@@ -111,12 +89,6 @@ const AppPage = () => {
             <ContactCard key={`contact-${contact.id}`} info={contact} />
           ))}
       </div>
-
-      <AddContactModal
-        refetch={refetch}
-        isOpen={isCreateContactModalOpen}
-        onClose={() => toggleCreateContactModal(false)}
-      />
     </div>
   );
 };

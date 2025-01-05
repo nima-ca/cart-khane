@@ -1,15 +1,17 @@
+"use client";
+
 import Button from "@src/components/ui/button/button";
 import IconButton from "@src/components/ui/iconButton/iconButton";
 import Input from "@src/components/ui/input/input";
-import Modal, { ModalProps } from "@src/components/ui/modal/modal";
+import { QueryKeys } from "@src/constants/queryKeys";
 import { checkEmptyString } from "@src/utils/empty";
 import { EMAIL_REGEX, IR_PHONE_NUMBER_REGEX } from "@src/utils/regex";
-import { useMutation } from "@tanstack/react-query";
-import { Plus, XIcon } from "lucide-react";
-import { FC } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ChevronLeft, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
-import { addContactAPI } from "../(api)/apis";
-import AvatarSelection from "./avatarSelection";
+import { addContactAPI } from "./(api)/apis";
+import AvatarSelection from "./(components)/avatarSelection";
 
 export interface AddContactFormData {
   name: string;
@@ -18,16 +20,14 @@ export interface AddContactFormData {
   avatarId: number;
 }
 
-export interface AddContactModalProps
-  extends Pick<ModalProps, "isOpen" | "onClose"> {
-  refetch: () => void;
-}
+const CreateContactPage = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
-const AddContactModal: FC<AddContactModalProps> = ({
-  isOpen,
-  onClose,
-  refetch,
-}) => {
+  const redirectToContactListPage = () => {
+    router.push("/app");
+  };
+
   const form = useForm<AddContactFormData>({
     defaultValues: { email: "", name: "", phoneNumber: "", avatarId: 36 },
   });
@@ -46,9 +46,9 @@ const AddContactModal: FC<AddContactModalProps> = ({
       },
       {
         onSuccess() {
-          refetch();
-          onClose();
           form.reset();
+          queryClient.invalidateQueries({ queryKey: [QueryKeys.ContactList] });
+          redirectToContactListPage();
         },
       }
     );
@@ -60,67 +60,68 @@ const AddContactModal: FC<AddContactModalProps> = ({
   };
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      classname="flex items-center justify-center p-4"
+    <form
+      noValidate
+      onSubmit={submitHandler}
+      className="w-full p-6 rounded-md flex flex-col gap-4 main-container"
     >
-      <form
-        noValidate
-        onSubmit={submitHandler}
-        className="bg-white w-full p-6 rounded-md flex flex-col gap-4 main-container"
-      >
-        <div className="flex justify-between items-center">
-          <p className="font-bold">افزودن مخاطب</p>
+      <div className="flex justify-between items-center mb-4 lg:mb-8">
+        <span></span>
+        <p className="font-bold">افزودن مخاطب</p>
 
-          <IconButton className="text-black" onClick={onClose} type="button">
-            <XIcon />
-          </IconButton>
-        </div>
+        <IconButton
+          className="text-black"
+          onClick={redirectToContactListPage}
+          type="button"
+        >
+          <ChevronLeft />
+        </IconButton>
+      </div>
 
-        <div className="grid grid-cols-4 lg:grid-cols-8 place-items-center gap-4 p-1">
-          <AvatarSelection
-            id={36}
-            onClick={() => handleSelectAvatar(36)}
-            selectedAvatarId={selectedAvatarId}
-          />
-          <AvatarSelection
-            id={43}
-            onClick={() => handleSelectAvatar(43)}
-            selectedAvatarId={selectedAvatarId}
-          />
-          <AvatarSelection
-            id={37}
-            onClick={() => handleSelectAvatar(37)}
-            selectedAvatarId={selectedAvatarId}
-          />
-          <AvatarSelection
-            id={57}
-            onClick={() => handleSelectAvatar(57)}
-            selectedAvatarId={selectedAvatarId}
-          />
-          <AvatarSelection
-            id={97}
-            onClick={() => handleSelectAvatar(97)}
-            selectedAvatarId={selectedAvatarId}
-          />
-          <AvatarSelection
-            id={94}
-            onClick={() => handleSelectAvatar(94)}
-            selectedAvatarId={selectedAvatarId}
-          />
-          <AvatarSelection
-            id={80}
-            onClick={() => handleSelectAvatar(80)}
-            selectedAvatarId={selectedAvatarId}
-          />
-          <AvatarSelection
-            id={48}
-            onClick={() => handleSelectAvatar(48)}
-            selectedAvatarId={selectedAvatarId}
-          />
-        </div>
+      <div className="grid grid-cols-4 lg:grid-cols-8 place-items-center gap-4 p-1">
+        <AvatarSelection
+          id={36}
+          onClick={() => handleSelectAvatar(36)}
+          selectedAvatarId={selectedAvatarId}
+        />
+        <AvatarSelection
+          id={43}
+          onClick={() => handleSelectAvatar(43)}
+          selectedAvatarId={selectedAvatarId}
+        />
+        <AvatarSelection
+          id={37}
+          onClick={() => handleSelectAvatar(37)}
+          selectedAvatarId={selectedAvatarId}
+        />
+        <AvatarSelection
+          id={57}
+          onClick={() => handleSelectAvatar(57)}
+          selectedAvatarId={selectedAvatarId}
+        />
+        <AvatarSelection
+          id={97}
+          onClick={() => handleSelectAvatar(97)}
+          selectedAvatarId={selectedAvatarId}
+        />
+        <AvatarSelection
+          id={94}
+          onClick={() => handleSelectAvatar(94)}
+          selectedAvatarId={selectedAvatarId}
+        />
+        <AvatarSelection
+          id={80}
+          onClick={() => handleSelectAvatar(80)}
+          selectedAvatarId={selectedAvatarId}
+        />
+        <AvatarSelection
+          id={48}
+          onClick={() => handleSelectAvatar(48)}
+          selectedAvatarId={selectedAvatarId}
+        />
+      </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2 gap-y-4 lg:gap-y-6 mt-4 lg:mt-8">
         <Controller
           name="name"
           control={form.control}
@@ -139,6 +140,7 @@ const AddContactModal: FC<AddContactModalProps> = ({
                 label="نام"
                 error={fieldState.error?.message}
                 placeholder="نام مخاطب را وارد کنید"
+                classNames={{ base: "lg:col-span-2" }}
               />
             );
           }}
@@ -193,13 +195,17 @@ const AddContactModal: FC<AddContactModalProps> = ({
           }}
         />
 
-        <Button type="submit" loading={addContactMutation.isPending}>
+        <Button
+          type="submit"
+          loading={addContactMutation.isPending}
+          className="lg:max-w-40"
+        >
           افزودن
           <Plus className="w-5 h-5" />
         </Button>
-      </form>
-    </Modal>
+      </div>
+    </form>
   );
 };
 
-export default AddContactModal;
+export default CreateContactPage;

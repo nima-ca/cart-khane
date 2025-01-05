@@ -11,10 +11,3 @@ export interface GetContactListAPIBody extends PaginationDto {
 export interface GetContactListAPIResponse extends PaginationMetadataDto {
   items: Contact[];
 }
-
-export interface AddContactAPIBody {
-  name: string;
-  email?: string;
-  phoneNumber?: string;
-  avatarId: number;
-}

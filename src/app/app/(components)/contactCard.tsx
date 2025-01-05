@@ -17,7 +17,7 @@ const ContactCard: FC<ContactCardProps> = ({ info, onClick }) => {
   return (
     <div
       onClick={onClick}
-      className="flex items-center justify-between bg-white rounded-lg p-4 cursor-pointer border border-gray-300 hover:-translate-y-1 active:-translate-y-0 transition-all"
+      className="flex items-center justify-between bg-white rounded-lg px-4 py-2 cursor-pointer border border-gray-300 hover:-translate-y-1 active:-translate-y-0 transition-all"
     >
       <div className="flex items-center gap-4">
         <Image

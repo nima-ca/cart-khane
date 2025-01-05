@@ -1,10 +1,6 @@
 import { CoreResponseDto } from "@src/types/api.types";
 import apiService from "@src/utils/api/api";
-import {
-  AddContactAPIBody,
-  GetContactListAPIBody,
-  GetContactListAPIResponse,
-} from "./apis.types";
+import { GetContactListAPIBody, GetContactListAPIResponse } from "./apis.types";
 
 export const getContactListAPI = async (
   params: GetContactListAPIBody
@@ -15,12 +11,5 @@ export const getContactListAPI = async (
       params,
     }
   );
-  return res.data;
-};
-
-export const addContactAPI = async (
-  body: AddContactAPIBody
-): Promise<CoreResponseDto> => {
-  const res = await apiService.post<CoreResponseDto>("/contact", body);
   return res.data;
 };
