@@ -2,7 +2,7 @@ import { AxiosError, isAxiosError } from "axios";
 import { toast } from "react-toastify";
 
 export const INTERNAL_SERVER_ERROR_MESSAGE =
-  "متأسفانه، خطایی در سرور رخ داده است. لطفاً بعداً دوباره تلاش کنید و در صورت تکرار این مشکل، با پشتیبانی تماس بگیرید.";
+  "متأسفانه، خطایی در سرور رخ داده است. لطفاً بعداً دوباره تلاش کنید.";
 export const NETWORK_ERROR_MESSAGE =
   "ارتباط با سرور برقرار نشد. لطفاً اتصال اینترنت خود را بررسی کرده و مجدداً تلاش کنید.";
 

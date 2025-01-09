@@ -9,6 +9,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   href?: string;
   loading?: boolean;
   variant?: "contained" | "outlined";
+  isDanger?: boolean;
 }
 
 const Button: FC<ButtonProps> = ({
@@ -18,6 +19,7 @@ const Button: FC<ButtonProps> = ({
   onClick,
   disabled,
   loading,
+  isDanger,
   variant = "contained",
   ...props
 }) => {
@@ -43,10 +45,12 @@ const Button: FC<ButtonProps> = ({
       className={cn(
         "flex items-center gap-2 justify-center bg-regal-blue-500 py-2 px-4 rounded-md text-white hover:opacity-90 transition-all active:opacity-100 font-bold text-sm lg:text-base",
         {
+          "bg-red-500 text-white": isDanger && variant === "contained",
+
           "bg-transparent text-regal-blue-500 border border-regal-blue-500":
             variant === "outlined",
-        },
-        {
+          "border-red-500 text-red-500": isDanger && variant === "outlined",
+
           "cursor-not-allowed opacity-70 hover:opacity-70 active:opacity-70":
             disabled || loading,
         },

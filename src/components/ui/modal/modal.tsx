@@ -18,7 +18,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({
       {isOpen && (
         <div
           className={cn(
-            "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all z-10 w-full",
+            "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all z-10",
             classname
           )}
         >

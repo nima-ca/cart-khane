@@ -86,7 +86,13 @@ const AppPage = () => {
         {isFetching && <Skeletons />}
         {!isFetching &&
           contactList.map((contact) => (
-            <ContactCard key={`contact-${contact.id}`} info={contact} />
+            <ContactCard
+              key={`contact-${contact.id}`}
+              info={contact}
+              onClick={() => {
+                router.push(`/app/contact/${contact.id}`);
+              }}
+            />
           ))}
       </div>
     </div>
