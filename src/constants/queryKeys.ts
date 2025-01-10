@@ -3,4 +3,5 @@ export enum QueryKeys {
   ContactList = "contact-list",
 
   CardsList = "cards-list",
+  Profile = "profile",
 }

@@ -86,6 +86,7 @@ const AppPage = () => {
               src={emptyImg}
               width={200}
               height={200}
+              priority
             />
             <p className="text-sm lg:text-base">مخاطبی یافت نشد!</p>
           </div>

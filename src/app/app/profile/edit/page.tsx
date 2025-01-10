@@ -5,45 +5,40 @@ import Button from "@src/components/ui/button/button";
 import IconButton from "@src/components/ui/iconButton/iconButton";
 import Input from "@src/components/ui/input/input";
 import { QueryKeys } from "@src/constants/queryKeys";
-import { checkEmptyString } from "@src/utils/empty";
-import { EMAIL_REGEX, IR_PHONE_NUMBER_REGEX } from "@src/utils/regex";
 import { minutes } from "@src/utils/time";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronLeft, Pencil } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { getContactAPI } from "../(api)/apis";
-import AvatarSelection from "../../create/(components)/avatarSelection";
-import { editContactAPI } from "./(api)/apis";
+import { getUserProfileAPI } from "../(api)/apis";
+import AvatarSelection from "../../contact/create/(components)/avatarSelection";
+import { editUserAPI } from "./(api)/apis";
 
-export interface AddContactFormData {
-  name: string;
-  email: string;
-  phoneNumber: string;
+export interface EditProfileFormData {
+  firstName: string;
+  lastName: string;
   avatarId: number;
 }
 
-const EditContactPage = () => {
+const EditProfilePage = () => {
   const router = useRouter();
-  const params = useParams();
-  const id = +(params.id as string);
-
   const queryClient = useQueryClient();
 
-  const redirectToContactPage = () => {
-    router.push(`/app/contact/${id}`);
+  const redirectToProfilePage = () => {
+    router.push("/app/profile");
   };
 
-  const form = useForm<AddContactFormData>({
-    defaultValues: { email: "", name: "", phoneNumber: "", avatarId: 36 },
+  const defaultAvatarId = 36;
+
+  const form = useForm<EditProfileFormData>({
+    defaultValues: { avatarId: defaultAvatarId, firstName: "", lastName: "" },
   });
 
   const { data, isFetching, isError } = useQuery({
-    queryKey: [QueryKeys.Contact, id],
-    queryFn: () => getContactAPI(id),
-    enabled: !!id,
+    queryKey: [QueryKeys.Profile],
+    queryFn: getUserProfileAPI,
     gcTime: minutes(1),
     staleTime: minutes(10),
   });
@@ -51,40 +46,37 @@ const EditContactPage = () => {
   useEffect(() => {
     if (isError) {
       router.replace("/app");
-      toast.error("مشکلی در دریفات اطلاعات مخاطب بوجود آمده است");
+      toast.error("مشکلی در دریافت اطلاعات کاربر بوجود آمده است");
     }
   }, [isError]);
 
   useEffect(() => {
     if (data?.data) {
       form.reset({
-        name: data.data.name ?? "",
-        email: data.data.email ?? "",
-        avatarId: data.data.avatarId,
-        phoneNumber: data.data.phoneNumber ?? "",
+        avatarId: data.data.avatarId ?? defaultAvatarId,
+        firstName: data.data.firstName ?? "",
+        lastName: data.data.lastName ?? "",
       });
     }
   }, [data]);
 
-  const editContactMutation = useMutation({
-    mutationFn: editContactAPI,
+  const editProfileMutation = useMutation({
+    mutationFn: editUserAPI,
   });
 
   const submitHandler = form.handleSubmit((values) => {
-    editContactMutation.mutate(
+    editProfileMutation.mutate(
       {
-        id,
-        name: values.name,
-        email: checkEmptyString(values.email),
-        phoneNumber: checkEmptyString(values.phoneNumber),
+        firstName: values.firstName.trim(),
+        lastName: values.lastName.trim(),
         avatarId: values.avatarId,
       },
       {
         onSuccess() {
           form.reset();
-          queryClient.invalidateQueries({ queryKey: [QueryKeys.Contact, id] });
-          redirectToContactPage();
-          toast.success("مخاطب با موفقیت ویرایش شد");
+          queryClient.invalidateQueries({ queryKey: [QueryKeys.Profile] });
+          redirectToProfilePage();
+          toast.success("پروفایل با موفقیت ویرایش شد");
         },
       }
     );
@@ -105,11 +97,11 @@ const EditContactPage = () => {
         >
           <div className="flex justify-between items-center mb-4 lg:mb-8">
             <span></span>
-            <p className="font-bold">ویرایش مخاطب</p>
+            <p className="font-bold">ویرایش پروفایل</p>
 
             <IconButton
               className="text-black"
-              onClick={redirectToContactPage}
+              onClick={redirectToProfilePage}
               type="button"
             >
               <ChevronLeft />
@@ -161,7 +153,7 @@ const EditContactPage = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-2 gap-y-4 lg:gap-y-6 mt-4 lg:mt-8">
             <Controller
-              name="name"
+              name="firstName"
               control={form.control}
               rules={{
                 required: "نام را وارد کنید",
@@ -177,57 +169,28 @@ const EditContactPage = () => {
                     required
                     label="نام"
                     error={fieldState.error?.message}
-                    placeholder="نام مخاطب را وارد کنید"
-                    classNames={{ base: "lg:col-span-2" }}
+                    placeholder="نام خود را وارد کنید"
                   />
                 );
               }}
             />
             <Controller
-              name="email"
+              name="lastName"
               control={form.control}
               rules={{
+                required: "نام خانوادگی را وارد کنید",
                 maxLength: {
-                  value: 320,
-                  message: "ایمیل نباید بیشتر از 320 حرف باشد",
-                },
-                pattern: {
-                  value: EMAIL_REGEX,
-                  message: "فرمت ایمیل نادرست است",
+                  value: 100,
+                  message: "نام خانوادگی نباید بیشتر از 100 حرف باشد",
                 },
               }}
               render={({ field, fieldState }) => {
                 return (
                   <Input
                     {...field}
-                    type="email"
-                    label="ایمیل"
+                    label="نام خانوادگی"
                     error={fieldState.error?.message}
-                    placeholder="ایمیل مخاطب را وارد کنید (اختیاری) "
-                  />
-                );
-              }}
-            />
-            <Controller
-              name="phoneNumber"
-              control={form.control}
-              rules={{
-                maxLength: {
-                  value: 15,
-                  message: "شماره همراه نباید بیشتر از 15 حرف باشد",
-                },
-                pattern: {
-                  value: IR_PHONE_NUMBER_REGEX,
-                  message: "فرمت شماره همراه نادرست است",
-                },
-              }}
-              render={({ field, fieldState }) => {
-                return (
-                  <Input
-                    {...field}
-                    label="شماره همراه"
-                    error={fieldState.error?.message}
-                    placeholder="شماره همراه مخاطب را وارد کنید (اختیاری) "
+                    placeholder="نام خانوادگی را وارد کنید"
                   />
                 );
               }}
@@ -238,14 +201,14 @@ const EditContactPage = () => {
                 type="button"
                 variant="outlined"
                 className="lg:max-w-40"
-                onClick={redirectToContactPage}
-                loading={editContactMutation.isPending}
+                onClick={redirectToProfilePage}
+                loading={editProfileMutation.isPending}
               >
                 بازگشت
               </Button>
               <Button
                 type="submit"
-                loading={editContactMutation.isPending}
+                loading={editProfileMutation.isPending}
                 className="lg:max-w-40"
               >
                 ویرایش
@@ -265,4 +228,4 @@ const EditContactPage = () => {
   );
 };
 
-export default EditContactPage;
+export default EditProfilePage;

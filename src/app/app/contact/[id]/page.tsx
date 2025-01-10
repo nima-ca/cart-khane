@@ -6,6 +6,7 @@ import { Spinner } from "@src/components/icons/spinner";
 import IconButton from "@src/components/ui/iconButton/iconButton";
 import { QueryKeys } from "@src/constants/queryKeys";
 import { Card } from "@src/types/card.types";
+import { minutes } from "@src/utils/time";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pen, Trash } from "lucide-react";
 import Image from "next/image";
@@ -61,12 +62,14 @@ const ContactPage = () => {
     queryKey: [QueryKeys.Contact, id],
     queryFn: () => getContactAPI(id),
     enabled: !!id,
+    gcTime: minutes(1),
+    staleTime: minutes(10),
   });
 
   useEffect(() => {
     if (isError) {
       router.replace("/app");
-      toast.error("مشکلی در دریفات اطلاعات مخاطب بوجود آمده است");
+      toast.error("مشکلی در دریافت اطلاعات مخاطب بوجود آمده است");
     }
   }, [isError]);
 
@@ -152,7 +155,7 @@ const ContactPage = () => {
       <Confirm
         title="حذف مخاطب"
         confirmText="حذف"
-        subTitle="آیا از حذف مخاطب مطمعن هستید؟"
+        subTitle="آیا از حذف مخاطب مطمئن هستید؟"
         isConfirmDanger
         isCancelDanger
         isOpen={isConfirmDeleteOpen}
