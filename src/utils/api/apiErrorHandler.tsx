@@ -1,5 +1,6 @@
 import { AxiosError, isAxiosError } from "axios";
 import { toast } from "react-toastify";
+import { logout } from "../logout";
 
 export const INTERNAL_SERVER_ERROR_MESSAGE =
   "متأسفانه، خطایی در سرور رخ داده است. لطفاً بعداً دوباره تلاش کنید.";
@@ -35,7 +36,7 @@ export const apiErrorHandler = (
   }
 
   if (statusCode === 401) {
-    // logout();
+    logout();
     toast.error("لطفا دوباره وارد شوید");
     return;
   }

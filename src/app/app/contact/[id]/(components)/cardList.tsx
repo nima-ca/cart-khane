@@ -1,3 +1,4 @@
+import emptyImg from "@images/empty-state.svg";
 import IconButton from "@src/components/ui/iconButton/iconButton";
 import { QueryKeys } from "@src/constants/queryKeys";
 import { Card } from "@src/types/card.types";
@@ -7,6 +8,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { CreditCard, Landmark, Pencil, Plus } from "lucide-react";
 import { nanoid } from "nanoid";
+import Image from "next/image";
 import { FC, useCallback, useMemo } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
@@ -87,6 +89,18 @@ const CardList: FC<CardListProps> = ({ contactId, openCardForm }) => {
         loader={<LoadingSkeletons />}
         className="grid gap-4 mt-8"
       >
+        {!isFetching && cardList.length === 0 && (
+          <div className="lg:col-span-2 flex flex-col items-center justify-center my-24">
+            <Image
+              alt="کارتی یافت نشد"
+              src={emptyImg}
+              width={200}
+              height={200}
+            />
+            <p className="text-sm lg:text-base">کارتی یافت نشد!</p>
+          </div>
+        )}
+
         {cardList.map((card) => (
           <div
             key={`contact-${contactId}-card-${card.id}`}
