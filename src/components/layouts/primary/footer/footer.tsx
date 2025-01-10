@@ -42,15 +42,27 @@ const PrimaryFooter = () => {
           <p className="font-bold text-sm lg:text-base">شبکه‌های اجتماعی:</p>
 
           <div className="flex justify-start items-center gap-4">
-            <Link href="/">
+            <Link
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://github.com/nima-ca/cart-khane"
+            >
               <GithubIcon className="w-6 h-6" />
             </Link>
 
-            <Link href="/">
+            <Link
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://x.com/nima_ca_"
+            >
               <XIcon className="w-6 h-6 fill-white" />
             </Link>
 
-            <Link href="/">
+            <Link
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.linkedin.com/in/nima-nekouei-nia/"
+            >
               <LinkedinIcon className="w-6 h-6" />
             </Link>
           </div>
