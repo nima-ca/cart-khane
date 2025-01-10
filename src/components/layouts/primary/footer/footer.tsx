@@ -44,6 +44,7 @@ const PrimaryFooter = () => {
           <div className="flex justify-start items-center gap-4">
             <Link
               target="_blank"
+              aria-label="github"
               rel="noopener noreferrer"
               href="https://github.com/nima-ca/cart-khane"
             >
@@ -52,6 +53,7 @@ const PrimaryFooter = () => {
 
             <Link
               target="_blank"
+              aria-label="twitter - x"
               rel="noopener noreferrer"
               href="https://x.com/nima_ca_"
             >
@@ -60,6 +62,7 @@ const PrimaryFooter = () => {
 
             <Link
               target="_blank"
+              aria-label="linkedin"
               rel="noopener noreferrer"
               href="https://www.linkedin.com/in/nima-nekouei-nia/"
             >

@@ -18,9 +18,9 @@ const MobileMenu = () => {
     <>
       <IconButton className="lg:hidden" onClick={() => setIsMenuOpen(true)}>
         {isMenuOpen ? (
-          <X className="text-black w-6 h-6" />
+          <X aria-label="close menu button" className="text-black w-6 h-6" />
         ) : (
-          <Menu className="text-black w-6 h-6" />
+          <Menu aria-label="open menu button" className="text-black w-6 h-6" />
         )}
       </IconButton>
 
