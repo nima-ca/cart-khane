@@ -11,6 +11,7 @@ import { nanoid } from "nanoid";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { getContactListAPI } from "./(api)/apis";
 import CardSkeleton from "./(components)/cardSkeleton";
 import ContactCard from "./(components)/contactCard";
@@ -24,7 +25,7 @@ const AppPage = () => {
 
   const debouncedSearch = useDebounce(search, 300);
 
-  const { data, isFetching } = useInfiniteQuery({
+  const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery({
     queryKey: [QueryKeys.ContactList, debouncedSearch],
     queryFn: ({ pageParam }) => {
       return getContactListAPI({
@@ -36,7 +37,7 @@ const AppPage = () => {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const metadata = lastPage.data.metadata;
-      if (metadata.totalPages < metadata.page) {
+      if (metadata.totalPages > metadata.page) {
         return metadata.page + 1;
       }
     },
@@ -71,7 +72,13 @@ const AppPage = () => {
         </IconButton>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 px-4 gap-2">
+      <InfiniteScroll
+        next={fetchNextPage}
+        hasMore={!!hasNextPage}
+        dataLength={contactList.length}
+        loader={<Skeletons />}
+        className="grid grid-cols-1 lg:grid-cols-2 px-4 gap-2"
+      >
         {!isFetching && isContactListEmpty && (
           <div className="lg:col-span-2 flex flex-col items-center justify-center my-24">
             <Image
@@ -83,18 +90,19 @@ const AppPage = () => {
             <p className="text-sm lg:text-base">مخاطبی یافت نشد!</p>
           </div>
         )}
+
+        {contactList.map((contact) => (
+          <ContactCard
+            key={`contact-${contact.id}`}
+            info={contact}
+            onClick={() => {
+              router.push(`/app/contact/${contact.id}`);
+            }}
+          />
+        ))}
+
         {isFetching && <Skeletons />}
-        {!isFetching &&
-          contactList.map((contact) => (
-            <ContactCard
-              key={`contact-${contact.id}`}
-              info={contact}
-              onClick={() => {
-                router.push(`/app/contact/${contact.id}`);
-              }}
-            />
-          ))}
-      </div>
+      </InfiniteScroll>
     </div>
   );
 };

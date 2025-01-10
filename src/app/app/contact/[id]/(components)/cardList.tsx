@@ -6,9 +6,12 @@ import { formatCreditCard } from "@src/utils/formatter";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { CreditCard, Landmark, Pencil, Plus } from "lucide-react";
-import { FC, useMemo } from "react";
+import { nanoid } from "nanoid";
+import { FC, useCallback, useMemo } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { toast } from "react-toastify";
 import { getCardListAPI } from "../(api)/apis";
+import CardSkeleton from "./cardSkeleton";
 
 interface CardListProps {
   contactId?: number;
@@ -32,7 +35,7 @@ const CardList: FC<CardListProps> = ({ contactId, openCardForm }) => {
     }
   };
 
-  const { data, isFetching } = useInfiniteQuery({
+  const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteQuery({
     queryKey: [QueryKeys.CardsList, contactId],
     queryFn: ({ pageParam }) => {
       return getCardListAPI({
@@ -44,7 +47,8 @@ const CardList: FC<CardListProps> = ({ contactId, openCardForm }) => {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const metadata = lastPage.data.metadata;
-      if (metadata.totalPages < metadata.page) {
+      console.log(metadata.totalPages, metadata.page);
+      if (metadata.totalPages > metadata.page) {
         return metadata.page + 1;
       }
     },
@@ -54,6 +58,12 @@ const CardList: FC<CardListProps> = ({ contactId, openCardForm }) => {
   const cardList = useMemo(() => {
     return data ? data.pages.flatMap((page) => page.data.items) : [];
   }, [data]);
+
+  const LoadingSkeletons = useCallback(() => {
+    return Array.from({ length: 10 }).map(() => (
+      <CardSkeleton key={nanoid()} />
+    ));
+  }, []);
 
   return (
     <div className="flex flex-col bg-white rounded-lg border border-gray-300 p-4">
@@ -70,7 +80,13 @@ const CardList: FC<CardListProps> = ({ contactId, openCardForm }) => {
         </div>
       </div>
 
-      <div className="grid gap-4 mt-8">
+      <InfiniteScroll
+        next={fetchNextPage}
+        hasMore={!!hasNextPage}
+        dataLength={cardList.length}
+        loader={<LoadingSkeletons />}
+        className="grid gap-4 mt-8"
+      >
         {cardList.map((card) => (
           <div
             key={`contact-${contactId}-card-${card.id}`}
@@ -117,7 +133,9 @@ const CardList: FC<CardListProps> = ({ contactId, openCardForm }) => {
             </div>
           </div>
         ))}
-      </div>
+
+        {isFetching && <LoadingSkeletons />}
+      </InfiniteScroll>
     </div>
   );
 };
